@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Ashraya Admin</title>
+  <meta name="description" content="AI-powered triage dashboard for government counselors monitoring victim mental health." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- ════════════════════════════════════════════════════════
+       SIDEBAR
+       ════════════════════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+
+    <!-- Brand -->
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon" aria-hidden="true">
+        <img src="/images/ashraya-logo.png" alt="Ashraya Logo" class="brand-logo-img" />
+      </div>
+      <div class="sidebar-brand-text">
+        <div class="sidebar-brand-title">Ashraya</div>
+        <div class="sidebar-brand-sub">Admin Dashboard</div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav" aria-label="Dashboard navigation">
+      <div class="nav-section-label">Main Menu</div>
+
+      <a href="/index.html" class="nav-item" data-page="index.html" data-tooltip="Dashboard" id="nav-dashboard">
+        <i class="fa-solid fa-gauge-high nav-item-icon"></i>
+        <span class="nav-item-label">Dashboard</span>
+        <span class="nav-badge" id="nav-critical-badge" aria-label="Critical cases"></span>
+      </a>
+
+      <a href="#victims-section" class="nav-item" data-page="victims" data-tooltip="Victims" id="nav-victims"
+         onclick="event.preventDefault(); document.getElementById('victims-section').scrollIntoView({behavior:'smooth'});">
+        <i class="fa-solid fa-users nav-item-icon"></i>
+        <span class="nav-item-label">Victims</span>
+      </a>
+
+      <div class="nav-section-label">Analytics</div>
+
+      <a href="#" class="nav-item" data-tooltip="Reports" id="nav-reports"
+         onclick="event.preventDefault(); alert('Reports module coming soon.')">
+        <i class="fa-solid fa-chart-bar nav-item-icon"></i>
+        <span class="nav-item-label">Reports</span>
+      </a>
+
+      <div class="nav-section-label">System</div>
+
+      <a href="#" class="nav-item" data-tooltip="Settings" id="nav-settings"
+         onclick="event.preventDefault(); alert('Settings module coming soon.')">
+        <i class="fa-solid fa-gear nav-item-icon"></i>
+        <span class="nav-item-label">Settings</span>
+      </a>
+
+      <a href="#" class="nav-item" data-tooltip="Logout" id="logout-btn">
+        <i class="fa-solid fa-right-from-bracket nav-item-icon" style="color: #FDA4AF;"></i>
+        <span class="nav-item-label" style="color: #FDA4AF;">Logout</span>
+      </a>
+    </nav>
+
+    <!-- User -->
+    <div class="sidebar-footer">
+      <div class="sidebar-user" aria-label="Logged in user">
+        <div class="sidebar-user-avatar" id="sidebar-user-avatar" aria-hidden="true">AS</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-user-name">Dr. Ananya Sharma</div>
+          <div class="sidebar-user-role" id="sidebar-user-role">Senior Counselor</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile backdrop -->
+  <div class="sidebar-backdrop" id="sidebar-backdrop" role="presentation"></div>
+
+  <!-- ════════════════════════════════════════════════════════
+       MAIN CONTENT
+       ════════════════════════════════════════════════════════ -->
+  <div class="main-content" id="main-content">
+
+    <!-- Top Bar -->
+    <header class="topbar" role="banner">
+      <button class="topbar-toggle" id="topbar-toggle" aria-label="Toggle sidebar" title="Toggle sidebar">
+        <i class="fa-solid fa-bars" id="topbar-toggle-icon"></i>
+      </button>
+
+      <div class="topbar-breadcrumb">
+        <div class="topbar-page-title">Overview</div>
+        <div class="topbar-page-sub">AI-Powered Mental Health Monitoring</div>
+      </div>
+
+      <div class="topbar-spacer"></div>
+
+      <div class="topbar-actions">
+        <!-- Auto-refresh indicator -->
+        <div class="auto-refresh-badge" title="Auto-refreshing every 60 seconds">
+          <div class="auto-refresh-dot"></div>
+          <span>Live &bull; <span id="last-refresh-time">—</span></span>
+        </div>
+
+        <div class="topbar-divider" aria-hidden="true"></div>
+
+        <button class="topbar-icon-btn" title="Alerts" aria-label="View alerts">
+          <i class="fa-solid fa-bell"></i>
+          <span class="topbar-badge-dot"></span>
+        </button>
+
+        <div class="topbar-divider" aria-hidden="true"></div>
+
+        <div class="topbar-user" role="button" tabindex="0" aria-label="User menu">
+          <div class="topbar-user-avatar" id="topbar-user-avatar" aria-hidden="true">AS</div>
+          <span class="topbar-user-name" id="topbar-user-name">Dr. Ananya Sharma</span>
+          <i class="fa-solid fa-chevron-down topbar-user-chevron"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-content" id="page-content" role="main">
+
+      <!-- ── KPI Cards ──────────────────────────────────────── -->
+      <section class="kpi-grid" aria-label="Summary statistics" id="kpi-section">
+
+        <div class="kpi-card kpi-total" id="kpi-total" title="Total number of victims across all risk levels">
+          <div class="kpi-icon-wrap"><i class="fa-solid fa-users"></i></div>
+          <div class="kpi-body">
+            <div class="kpi-label">Total Victims</div>
+            <div class="kpi-value" aria-live="polite">—</div>
+            <div class="kpi-sub">Across all risk levels</div>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-critical" id="kpi-critical" title="Distress score ≥ 80 — Immediate intervention required">
+          <div class="kpi-icon-wrap"><i class="fa-solid fa-circle-exclamation"></i></div>
+          <div class="kpi-body">
+            <div class="kpi-label">Critical</div>
+            <div class="kpi-value" aria-live="polite">—</div>
+            <div class="kpi-sub">Need immediate help</div>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-high" id="kpi-high" title="Distress score 70–79 — Close monitoring needed">
+          <div class="kpi-icon-wrap"><i class="fa-solid fa-arrow-trend-up"></i></div>
+          <div class="kpi-body">
+            <div class="kpi-label">High Risk</div>
+            <div class="kpi-value" aria-live="polite">—</div>
+            <div class="kpi-sub">Close monitoring needed</div>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-medium" id="kpi-medium" title="Distress score 40–69 — Regular follow-up scheduled">
+          <div class="kpi-icon-wrap"><i class="fa-solid fa-minus"></i></div>
+          <div class="kpi-body">
+            <div class="kpi-label">Medium Risk</div>
+            <div class="kpi-value" aria-live="polite">—</div>
+            <div class="kpi-sub">Regular follow-up</div>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-low" id="kpi-low" title="Distress score < 40 — Stable and in recovery">
+          <div class="kpi-icon-wrap"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="kpi-body">
+            <div class="kpi-label">Low Risk</div>
+            <div class="kpi-value" aria-live="polite">—</div>
+            <div class="kpi-sub">Stable — in recovery</div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ── Main Section: Table + Trend ───────────────────── -->
+      <div class="dashboard-main" id="victims-section">
+
+        <!-- ── Triage Table Card ─────────────────────────── -->
+        <div class="vc-card">
+          <div class="vc-card-header">
+            <div class="vc-card-title">
+              <i class="fa-solid fa-list-ol"></i>
+              Priority Queue
+              <span class="table-title-sub">· sorted by distress score</span>
+            </div>
+            <div class="table-toolbar">
+              <!-- Search -->
+              <div class="search-wrap">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="triage-search" class="search-input"
+                       placeholder="Search ID, name, location..." aria-label="Search victims" />
+              </div>
+              <!-- Risk Filters -->
+              <button class="filter-btn active" data-filter="All">All</button>
+              <button class="filter-btn" data-filter="Critical" title="Show only Critical risk">
+                <i class="fa-solid fa-circle" style="color:var(--color-critical);font-size:8px;"></i> Critical
+              </button>
+              <button class="filter-btn" data-filter="High" title="Show only High risk">High</button>
+              <button class="filter-btn" data-filter="Medium" title="Show only Medium risk">Med</button>
+              <button class="filter-btn" data-filter="Low" title="Show only Low risk">Low</button>
+              <!-- Refresh -->
+              <button class="refresh-btn" id="refresh-btn" title="Refresh data now" aria-label="Refresh table">
+                <i class="fa-solid fa-rotate-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Result count -->
+          <div style="padding: 8px 20px; font-size:12px; color:var(--color-text-muted); border-bottom:1px solid var(--color-border);">
+            <span id="result-count">Loading...</span>
+          </div>
+
+          <div class="triage-table-wrap">
+            <table class="triage-table" role="table" aria-label="Victim priority queue">
+              <colgroup>
+                <col style="width:100px">
+                <col style="width:auto">
+                <col style="width:170px">
+                <col style="width:90px">
+                <col style="width:110px">
+                <col style="width:100px">
+                <col style="width:60px">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th scope="col" class="th-left">ID</th>
+                  <th scope="col" class="th-left">Victim</th>
+                  <th scope="col" class="th-left">Category</th>
+                  <th scope="col" class="th-center">Score</th>
+                  <th scope="col" class="th-left">Risk</th>
+                  <th scope="col" class="th-left">Last Seen</th>
+                  <th scope="col" class="th-center">Action</th>
+                </tr>
+              </thead>
+              <tbody id="triage-tbody" aria-live="polite" aria-label="Victim rows">
+                <!-- Populated by dashboard.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── Trend Panel ───────────────────────────────── -->
+        <div class="trend-panel">
+
+          <!-- System Overview Chart -->
+          <div class="vc-card">
+            <div class="vc-card-header">
+              <div class="vc-card-title">
+                <i class="fa-solid fa-chart-bar"></i>
+                System Overview
+              </div>
+            </div>
+            <div class="vc-card-body">
+              <div class="chart-canvas-wrap">
+                <canvas id="system-trend-chart" aria-label="System distress score overview chart" role="img"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Status Summary -->
+          <div class="vc-card">
+            <div class="vc-card-header">
+              <div class="vc-card-title">
+                <i class="fa-solid fa-list-check"></i>
+                Risk Summary
+              </div>
+            </div>
+            <div class="vc-card-body" style="padding:14px;">
+              <div class="status-list" id="status-list">
+                <div class="status-item">
+                  <div class="status-dot" style="background:var(--color-critical);"></div>
+                  <div class="status-info">
+                    <div class="status-name">Critical</div>
+                    <div class="status-count">Score ≥ 70 · Immediate action</div>
+                  </div>
+                </div>
+                <div class="status-item">
+                  <div class="status-dot" style="background:var(--color-high);"></div>
+                  <div class="status-info">
+                    <div class="status-name">High</div>
+                    <div class="status-count">Score 70–79 · Close monitoring</div>
+                  </div>
+                </div>
+                <div class="status-item">
+                  <div class="status-dot" style="background:var(--color-medium);"></div>
+                  <div class="status-info">
+                    <div class="status-name">Medium</div>
+                    <div class="status-count">Score 40–69 · Regular follow-up</div>
+                  </div>
+                </div>
+                <div class="status-item">
+                  <div class="status-dot" style="background:var(--color-low);"></div>
+                  <div class="status-info">
+                    <div class="status-name">Low</div>
+                    <div class="status-count">Score &lt; 40 · Stable recovery</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end .trend-panel -->
+      </div><!-- end .dashboard-main -->
+
+    </main>
+  </div><!-- end .main-content -->
+
+</div><!-- end .app-wrapper -->
+
+<!-- ════════════════════════════════════════════════════════
+     INTERVENTION DRAWER (right slide-in)
+     ════════════════════════════════════════════════════════ -->
+<div class="drawer-backdrop" id="drawer-backdrop" role="presentation"></div>
+
+<aside class="intervention-drawer" id="intervention-drawer"
+       role="complementary" aria-label="Intervention panel">
+
+  <!-- Drawer Header -->
+  <div class="drawer-header">
+    <div class="drawer-victim-info">
+      <div class="drawer-victim-id" id="drawer-victim-id">Loading...</div>
+      <div class="drawer-victim-name" id="drawer-victim-name">—</div>
+      <div class="drawer-badges" id="drawer-badges"></div>
+    </div>
+    <button class="drawer-close-btn" id="close-drawer-btn" aria-label="Close intervention panel">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <!-- Score Banner -->
+  <div class="drawer-score-banner" id="drawer-score-banner" style="margin:14px 20px 0;">
+    <div>
+      <div class="drawer-score-num" id="drawer-score-num">—</div>
+      <div class="drawer-score-label" id="drawer-score-label">Distress Score</div>
+    </div>
+    <div>
+      <div class="drawer-score-sublabel" id="drawer-score-sublabel">—</div>
+    </div>
+  </div>
+
+  <!-- Scrollable Body -->
+  <div class="drawer-body" id="drawer-body">
+
+    <!-- AI Conversation -->
+    <div>
+      <div class="drawer-section-label">
+        <i class="fa-solid fa-comments" style="margin-right:5px;"></i>Latest Session
+      </div>
+      <div class="chat-bubble-wrap" id="drawer-chat">
+        <!-- Populated by dashboard.js -->
+      </div>
+    </div>
+
+    <!-- Recommended Action -->
+    <div>
+      <div class="drawer-section-label">
+        <i class="fa-solid fa-lightbulb" style="margin-right:5px;"></i>AI Recommendation
+      </div>
+      <div id="drawer-recommended-action"></div>
+    </div>
+
+    <!-- Action Status -->
+    <div id="drawer-action-status"></div>
+
+  </div>
+
+  <!-- Drawer Footer -->
+  <div class="drawer-footer">
+    <button class="btn-action-taken" id="btn-action-taken" aria-label="Mark action as taken">
+      <i class="fa-solid fa-check"></i> Mark as Action Taken
+    </button>
+    <a href="#" class="btn-view-profile" id="drawer-profile-link" aria-label="View full victim profile">
+      <i class="fa-solid fa-user"></i> View Full Profile
+      <i class="fa-solid fa-arrow-right" style="font-size:11px;"></i>
+    </a>
+  </div>
+
+</aside>
+
+<!-- Toast Container -->
+<div id="toast-container" role="status" aria-live="polite"></div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script type="module" src="/js/dashboard.js"></script>
+
+<!-- Sidebar toggle and icon swap handled by initSidebar() in utils.js -->
+
+</body>
+</html>

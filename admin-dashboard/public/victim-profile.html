@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Victim Profile — Ashraya Admin</title>
+  <meta name="description" content="Full victim profile with session transcripts, distress history, and case notes." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/victim-profile.css" />
+</head>
+<body>
+<div class="app-wrapper">
+
+  <!-- ════════════════════════════════════════════════════════
+       SIDEBAR (same structure as index.html)
+       ════════════════════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon" aria-hidden="true">
+        <img src="/images/ashraya-logo.png" alt="Ashraya Logo" class="brand-logo-img" />
+      </div>
+      <div class="sidebar-brand-text">
+        <div class="sidebar-brand-title">Ashraya</div>
+        <div class="sidebar-brand-sub">Admin Dashboard</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Dashboard navigation">
+      <div class="nav-section-label">Main Menu</div>
+
+      <a href="/index.html" class="nav-item" data-page="index.html" data-tooltip="Dashboard">
+        <i class="fa-solid fa-gauge-high nav-item-icon"></i>
+        <span class="nav-item-label">Dashboard</span>
+      </a>
+
+      <a href="/index.html#victims-section" class="nav-item active" data-page="victim-profile.html" data-tooltip="Victims">
+        <i class="fa-solid fa-users nav-item-icon"></i>
+        <span class="nav-item-label">Victims</span>
+      </a>
+
+      <div class="nav-section-label">Analytics</div>
+
+      <a href="#" class="nav-item" data-tooltip="Reports"
+         onclick="event.preventDefault(); alert('Reports module coming soon.')">
+        <i class="fa-solid fa-chart-bar nav-item-icon"></i>
+        <span class="nav-item-label">Reports</span>
+      </a>
+
+      <div class="nav-section-label">System</div>
+
+      <a href="#" class="nav-item" data-tooltip="Settings"
+         onclick="event.preventDefault(); alert('Settings module coming soon.')">
+        <i class="fa-solid fa-gear nav-item-icon"></i>
+        <span class="nav-item-label">Settings</span>
+      </a>
+
+      <a href="#" class="nav-item" data-tooltip="Logout" id="logout-btn"
+         onclick="event.preventDefault();">
+        <i class="fa-solid fa-right-from-bracket nav-item-icon" style="color:#FDA4AF;"></i>
+        <span class="nav-item-label" style="color:#FDA4AF;">Logout</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar" id="sidebar-user-avatar" aria-hidden="true">AS</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-user-name">Dr. Ananya Sharma</div>
+          <div class="sidebar-user-role" id="sidebar-user-role">Senior Counselor</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile backdrop -->
+  <div class="sidebar-backdrop" id="sidebar-backdrop" role="presentation"></div>
+
+  <!-- ════════════════════════════════════════════════════════
+       MAIN CONTENT
+       ════════════════════════════════════════════════════════ -->
+  <div class="main-content" id="main-content">
+
+    <!-- Top Bar -->
+    <header class="topbar" role="banner">
+      <button class="topbar-toggle" id="topbar-toggle" aria-label="Toggle sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <div class="topbar-breadcrumb">
+        <div class="topbar-page-title">Victim Profile</div>
+        <div class="topbar-page-sub">Full case view &amp; session history</div>
+      </div>
+
+      <div class="topbar-spacer"></div>
+
+      <div class="topbar-actions">
+        <button class="topbar-icon-btn" title="Alerts" aria-label="View alerts">
+          <i class="fa-solid fa-bell"></i>
+        </button>
+        <div class="topbar-divider" aria-hidden="true"></div>
+        <div class="topbar-user" role="button" tabindex="0">
+          <div class="topbar-user-avatar" id="topbar-user-avatar" aria-hidden="true">AS</div>
+          <span class="topbar-user-name" id="topbar-user-name">Dr. Ananya Sharma</span>
+          <i class="fa-solid fa-chevron-down topbar-user-chevron"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-content" id="page-content" role="main">
+
+      <!-- Back Navigation -->
+      <a href="/index.html" class="back-link" aria-label="Back to dashboard">
+        <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+      </a>
+
+      <!-- ── Loading State ───────────────────────────────── -->
+      <div class="profile-loading" id="profile-loading" role="status" aria-label="Loading profile">
+        <div class="loading-spinner" aria-hidden="true"></div>
+        <div class="loading-text">Loading victim profile...</div>
+      </div>
+
+      <!-- ── Error State ─────────────────────────────────── -->
+      <div class="profile-error" id="profile-error" style="display:none;" role="alert">
+        <div class="profile-error-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="profile-error-title">Failed to Load Profile</div>
+        <div class="profile-error-sub" id="profile-error-msg">An error occurred. Please try again.</div>
+        <a href="/index.html" class="back-link" style="justify-content:center;margin-top:16px;">
+          <i class="fa-solid fa-arrow-left"></i> Return to Dashboard
+        </a>
+      </div>
+
+      <!-- ── Profile Content (hidden until loaded) ────────── -->
+      <div id="profile-content" style="display:none;">
+
+        <!-- ── Profile Header Card ───────────────────────── -->
+        <div class="profile-header-card vc-card" id="profile-header-card">
+          <!-- Avatar -->
+          <div class="profile-avatar" id="profile-avatar" aria-hidden="true">—</div>
+
+          <!-- Info -->
+          <div class="profile-info">
+            <div class="profile-victim-id" id="profile-victim-id">—</div>
+            <div class="profile-name" id="profile-name">—</div>
+            <div class="profile-badges" id="profile-badges"></div>
+
+            <div class="profile-meta-grid" style="margin-top:14px;">
+              <div class="profile-meta-item">
+                <i class="fa-solid fa-user"></i>
+                <span id="profile-age">—</span>
+              </div>
+              <div class="profile-meta-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <span id="profile-location">—</span>
+              </div>
+              <div class="profile-meta-item">
+                <i class="fa-solid fa-user-tie"></i>
+                <span id="profile-counselor">—</span>
+              </div>
+              <div class="profile-meta-item">
+                <i class="fa-solid fa-calendar"></i>
+                <span id="profile-registered">—</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="profile-stats" aria-label="Quick statistics">
+            <div class="profile-stat">
+              <div class="profile-stat-value" id="profile-score-value">—</div>
+              <div class="profile-stat-label">Distress Score</div>
+            </div>
+            <div class="profile-stat">
+              <div class="profile-stat-value" id="profile-sessions-value">—</div>
+              <div class="profile-stat-label">Sessions</div>
+            </div>
+            <div class="profile-stat">
+              <div class="profile-stat-value" id="profile-lastseen-value" style="font-size:14px;">—</div>
+              <div class="profile-stat-label">Last Seen</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Grid: Chart + Quick Stats ─────────────────── -->
+        <div class="profile-grid">
+
+          <!-- Distress History Chart -->
+          <div class="vc-card">
+            <div class="vc-card-header">
+              <div class="vc-card-title">
+                <i class="fa-solid fa-chart-line"></i>
+                Distress Score History
+              </div>
+            </div>
+            <div class="vc-card-body">
+              <div class="profile-chart-wrap">
+                <canvas id="distress-history-chart" aria-label="Distress history chart" role="img"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Stats Sidebar -->
+          <div class="vc-card">
+            <div class="vc-card-header">
+              <div class="vc-card-title">
+                <i class="fa-solid fa-circle-info"></i>
+                Case Statistics
+              </div>
+            </div>
+            <div class="vc-card-body" style="padding:14px;">
+              <div class="quick-stats" id="quick-stats-list">
+                <!-- Populated by victim-profile.js -->
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end .profile-grid -->
+
+        <!-- ── Full-Width Section ─────────────────────────── -->
+        <div class="profile-full-row">
+
+          <!-- Session Transcripts -->
+          <div class="vc-card">
+            <div class="vc-card-header">
+              <div class="vc-card-title">
+                <i class="fa-solid fa-comments"></i>
+                Session Transcripts
+                <span style="font-size:11px;color:var(--color-text-muted);font-weight:500;">(newest first)</span>
+              </div>
+            </div>
+            <div class="vc-card-body">
+              <div class="transcript-list" id="transcript-list" aria-label="Session transcript history">
+                <!-- Populated by victim-profile.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Recommended Actions Log -->
+          <div class="vc-card">
+            <div class="vc-card-header">
+              <div class="vc-card-title">
+                <i class="fa-solid fa-list-check"></i>
+                Recommended Actions Log
+              </div>
+            </div>
+            <div class="vc-card-body">
+              <div class="action-log" id="actions-log" aria-label="Actions log">
+                <!-- Populated by victim-profile.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Case Notes -->
+          <div class="vc-card">
+            <div class="vc-card-header">
+              <div class="vc-card-title">
+                <i class="fa-solid fa-note-sticky"></i>
+                Counselor Case Notes
+              </div>
+            </div>
+            <div class="vc-card-body">
+              <textarea
+                id="case-notes-textarea"
+                class="case-notes-textarea"
+                placeholder="Enter your case notes here. These are saved securely and visible only to assigned counselors..."
+                aria-label="Case notes textarea"
+                rows="6"
+              ></textarea>
+              <div class="case-notes-footer">
+                <span class="notes-last-saved" id="notes-last-saved">No notes saved yet.</span>
+                <button class="btn-save-notes" id="save-notes-btn" aria-label="Save case notes">
+                  <i class="fa-solid fa-floppy-disk"></i> Save Notes
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end .profile-full-row -->
+      </div><!-- end #profile-content -->
+
+    </main>
+  </div><!-- end .main-content -->
+
+</div><!-- end .app-wrapper -->
+
+<!-- Toast Container -->
+<div id="toast-container" role="status" aria-live="polite"></div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script type="module" src="/js/victim-profile.js"></script>
+
+<!-- Sidebar toggle (inline — runs before module) -->
+<script>
+  document.getElementById('topbar-toggle')?.addEventListener('click', () => {
+    const sidebar  = document.getElementById('sidebar');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    const isDesktop = window.innerWidth >= 992;
+    if (isDesktop) {
+      sidebar.classList.toggle('collapsed');
+      localStorage.setItem('sidebar_collapsed', sidebar.classList.contains('collapsed'));
+    } else {
+      sidebar.classList.toggle('open');
+      backdrop.classList.toggle('show');
+      document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+    }
+  });
+  document.getElementById('sidebar-backdrop')?.addEventListener('click', () => {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-backdrop').classList.remove('show');
+    document.body.style.overflow = '';
+  });
+  if (window.innerWidth >= 992 && localStorage.getItem('sidebar_collapsed') === 'true') {
+    document.getElementById('sidebar')?.classList.add('collapsed');
+  }
+
+  // Logout (mirrored from dashboard)
+  document.getElementById('logout-btn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (confirm('Are you sure you want to log out?')) {
+      sessionStorage.removeItem('counselor_session');
+      window.location.replace('/login.html');
+    }
+  });
+</script>
+
+</body>
+</html>
